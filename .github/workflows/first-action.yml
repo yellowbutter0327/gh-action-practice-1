@@ -7,7 +7,9 @@ jobs:
     runs-on: macos-latest
     steps: 
       - name: Print Greeting
-        run: echo "Hello World"
+        run: |
+              echo "Hello World1"
+              echo "Hello World2"
 # name: 단계의 이름을 정의합니다
 # run : 명령어 실행하는 단계
       - name: Print Goodbye
