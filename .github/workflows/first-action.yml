@@ -1,0 +1,15 @@
+name: First WorkFlow
+# 이 키는 무조건 name이어야 함
+on: workflow_dispatch
+# on 다음에 이벤트 추가, 사용자가 수동으로 워크플로우를 트리거할 수 있게 함
+jobs: 
+  first-job:
+    runs-on: macos-latest
+    steps: 
+      - name: Print Greeting
+        run: echo "Hello World"
+# name: 단계의 이름을 정의합니다
+# run : 명령어 실행하는 단계
+      - name: Print Goodbye
+        run: echo "Done - bye!"
+# github actions - 자체 호스팅 실행기 - 자체 호스팅 실행기 정보 들어가면 볼 수 있음
