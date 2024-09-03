@@ -1,0 +1,20 @@
+# 1. lint, test & deploy on “push”
+# 하나의 작업(job)에서 모두 처리
+name: Deployment Exercise 1
+on: push
+jobs:
+  deploy:
+    runs-on: macos-latest
+    steps:
+      - name: Get Code
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Test code
+        run: npm run test
+      - name: Build code
+        run: npm run build
+      - name: Deploy code
+        run: echo "Deploying..."
