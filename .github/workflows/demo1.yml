@@ -1,0 +1,35 @@
+# Event Filter: 이벤트가 발생했을 때, 그 이벤트가 어떤 조건을 만족할 때 워크플로우가 트리거될지 결정
+# 예를 들어, 특정 브랜치에서만, 또는 특정 경로의 파일이 변경될 때만 워크플로우를 실행할 수 있다.
+# Activity Type: 특정 이벤트 내에서 발생하는 세부적인 활동을 구분하는 메커니즘
+# 예를 들어, 풀 리퀘스트가 열릴 때, 수정될 때, 또는 닫힐 때 등 특정 활동 유형에 따라 워크플로우를 트리거할 수 있다.
+# write workflows - choose when workflows run - events that trigger workflows 공식 문서에서 확인
+# 기본값으로 활동유형 명시하지 않으면 workflow only runs when a pull_request event's activity type is opened, synchronize, or reopened
+# [push,workflow_dispatch]:
+# on: [push, workflow_dispatch]는 두 가지 이벤트 (push, workflow_dispatch) 중 하나라도 발생하면 워크플로우를 트리거.
+
+name: Events Demo 1
+on:
+  #  pull request 반드시 새로운 브랜치가 있어야함
+  pull_request:
+    # 특정 pull_request 활동 유형에 따라 워크플로우를 트리거
+    types:
+      - opened
+      - edited
+    # [opened, edited] 이렇게 해도 된다.
+  workflow_dispatch: # 이 부분은 pull_request와 동일한 수준에 있어야
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output event data
+        run: echo "${{ toJSON(github.event) }}"
+      - name: Get code
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: npm ci
+      - name: Test code
+        run: npm run test
+      - name: Build code
+        run: npm run build
+      - name: Deploy project
+        run: echo "Deploying..."
