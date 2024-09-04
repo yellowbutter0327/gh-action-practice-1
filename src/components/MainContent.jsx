@@ -9,6 +9,7 @@ function MainContent() {
     setHelpVisible((isVisible) => !isVisible);
   }
 
+  // 커밋 테스트
   return (
     <main>
       <button onClick={toggleHelp}>{helpVisible ? "Hide" : "Show"} Help</button>
