@@ -38,7 +38,17 @@ jobs:
       # 공식 문서 - actions - upload artifacts
   deploy:
     needs: build
+    # 배포하려면 build 과정이 필수
     runs-on: ubuntu-latest
     steps:
+      #  업로드된 artifacts를 다운로드한다.
+      - name: Get build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          # build 때랑 동일한 이름 사용
+          name: dist-files
+      #  빌드 과정에서 dist 폴더가 제대로 생성되었는지 ls 명령어를 통해 알 수 있다.
+      - name: Output contents
+        run: ls
       - name: Deploy
         run: echo "Deploying..."
