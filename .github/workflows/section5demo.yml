@@ -6,6 +6,9 @@ on:
 jobs:
   test:
     runs-on: macos-latest
+    # 공식문서 contexts에서 확인
+    outputs:
+      script-file: ${{steps.publish.outputs.script-file}}
     steps:
       - name: Get code
         uses: actions/checkout@v4
@@ -18,6 +21,9 @@ jobs:
   build:
     needs: test
     runs-on: ubuntu-latest
+    outputs:
+      # 맨 뒤 script-file은 run쪽에서 영향받은것
+      script-file: ${{steps.publish.outputs.script-file}}
     steps:
       - name: Get code
         uses: actions/checkout@v4
@@ -25,6 +31,16 @@ jobs:
         run: npm ci
       - name: Build website
         run: npm run build
+      # js 파일을 assets 폴더와 dist 폴더에서 찾는다.
+      - name: Publish JS filename
+        id: publish
+        # 이 id를 통해 script-file에서 접근 가능함
+        # 에코 명령을 실행해 파일 이름을 출력한다.
+        # 파일 출력을 넘어서 출력 값에 엑세스하려면 outputs 키를 추가해야함
+        # outputs에서 정의한 이름일 필요가 없는게, 이 단계에서 출력 이름을 정하는 것이기 때문
+        # '::set-output name=script-file::{}'';은 GITHUB_OUTPUT으로 대체되었음'
+        run: find dist/assets/*.js -type f -execdir echo 'script-file={}' >> $GITHUB_OUTPUT ';'
+
       # 빌드로 만들어진 파일을 저장하고 수동으로 접근
       # npm run build 하면 dist 폴더 생성됨
       - name: Upload artifacts
@@ -50,5 +66,9 @@ jobs:
       #  빌드 과정에서 dist 폴더가 제대로 생성되었는지 ls 명령어를 통해 알 수 있다.
       - name: Output contents
         run: ls
+      - name: Output filename
+        run: echo "$${ needs.build.outputs.script-file}}"
+        # deploy에서 build 내역가져다 사용가능
       - name: Deploy
         run: echo "Deploying..."
+# build-assests-js 파일명은 배포할때마다 바뀌기 때문에 이것도 관리를 해야함
