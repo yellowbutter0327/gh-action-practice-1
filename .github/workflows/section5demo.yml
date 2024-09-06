@@ -95,3 +95,4 @@ jobs:
       - name: Deploy
         run: echo "Deploying..."
 # build-assests-js 파일명은 배포할때마다 바뀌기 때문에 이것도 관리를 해야함
+#  npm outdated : npm 패키지들이 최신 버전인지 확인하는 명령어
